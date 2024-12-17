@@ -1,18 +1,17 @@
 .page-container {
-  display: flex;
-  flex-direction: column;
   height: 200vh;
-  overflow: hidden;
+  /* overflow: auto; */
 }
 
-.threejs-background {
+/* .threejs-background {
+  flex: 1;
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: -1; /* Ensures the canvas is in the background */
-}
+  z-index: -1; /* Ensures the canvas is in the background
+} */
 
 /* Content container that holds the scrollable sections */
 .content-container {

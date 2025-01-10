@@ -1,9 +1,10 @@
-import headshot from './headshot.PNG'
+import headshot from './headshotcropped.png'
+import resume from './JasonLaiResume.pdf'
 import earth from './8k_earth_daymap.jpg'
 import moon from './8k_moon.jpg'
 import React, { useRef, useState, useFrame, useEffect } from 'react';
 import { Canvas, useLoader } from '@react-three/fiber';
-import { Html, OrbitControls, PerspectiveCamera } from '@react-three/drei'; // For embedding HTML content in the 3D scene
+import { Html, OrbitControls, PerspectiveCamera, useGLTF } from '@react-three/drei'; // For embedding HTML content in the 3D scene
 import { TextureLoader } from 'three';
 import './App.css';
 
@@ -61,7 +62,7 @@ const RotatingPlanet = ({pos, radius, texture}) => {
     };
     animate();
 
-    const onScroll = () => handleScroll(meshRef, initialY, 0.01); // Pass meshRef and multiplier
+    const onScroll = () => handleScroll(meshRef, initialY, 0.003); // Pass meshRef and multiplier
     window.addEventListener("scroll", onScroll);
 
     return () => window.removeEventListener("scroll", onScroll); // Cleanup
@@ -111,7 +112,12 @@ const makeStars = (numStars) => {
   return stars;
 };
 
-const Scene = ({ }) => {
+const Model = () => {
+  const gltf = useGLTF('/models/your-model.glb'); // Adjust the path as necessary
+  return <primitive object={gltf.scene} />;
+};
+
+const SceneOne = ({ }) => {
 
   const numStars = 500;
   const stars = makeStars(numStars);
@@ -125,49 +131,86 @@ const Scene = ({ }) => {
       <pointLight color={0xFFEA99} intensity={100} position={[0, 0, 8]} />
 
       {/* <RotatingBox pos={[2, 2.5, 0]}/> */}
+      
       <RotatingPlanet pos={[2, 0, 5]} radius={2} texture={earthTexture}/>
-      <RotatingPlanet pos={[1, -6, 5]} radius={0.3} texture={moonTexture}/>
+      <RotatingPlanet pos={[1.25, -4, 5]} radius={0.3} texture={moonTexture}/>
       {/* <Sphere pos = {[4, 1, 0]} radius={0.1} color={"yellow"}/> */}
       {stars}
 
       {/* <OrbitControls /> */}
 
       {/* HTML content embedded into the 3D scene */}
-      <Html position={[-4.5, 5.5, 0]}>
-        <div className="content">
-          <h1 style={{textAlign:"center"}}>Hi! I am Jason Lai</h1>
-          <img src={headshot} style={{width: '100%', height: 'auto'}}/>
+      <Html position={[-3.5, 5, 0]}>
+        <div id="section1">
+          <div className="content" id="intro">
+            <h1 className="text" id="title">Hi! I am Jason Lai</h1>
+          </div>
+          <img src={headshot} id = "headshot"/>
+          <div className="content" id="objective">
+            <h2 className="text" id="bigtext">I am an aspiring software developer aiming to create innovative and impactful solutions.</h2>
+          </div>
         </div>
       </Html>
 
-      <Html position={[-4.5, 0, 0]}>
-      <div className="content">
-          <section>
-            <h1>Welcome to the Page</h1>
-            <p>Scroll down to see the 3D background scroll with the page content.</p>
-          </section>
-
-          <section>
-            <h1>Section 2</h1>
-            <p>More content that appears as you scroll.</p>
-          </section>
-
-          <section>
-            <h1>Section 3</h1>
-            <p>Even more content in the next section.</p>
-          </section>
+      <Html position={[-5.5, -0.5, 0]}>
+        <div>
+          <div className="content" id="aboutme">
+            <h1>About Me</h1>
+          </div>
+          <div className="content" id="aboutme">
+            <p className="text">My name is Jason, and I am a second year at Georgia Tech studying Computer Science. My areas of concentration are in Computational Intelligence and Information Networks, and I am also pursuing a minor in Mathematics.
+              I hope to pursue a career where I can apply my development skills to create value or solve problems, particularly in the realm of software engineering or machine learning. In addition, my hobbies include working out and playing basketball.
+            </p>
+          </div>
+          <div id="resume">
+            <iframe src={resume} width="100%" height="600px"></iframe>
+          </div>
         </div>
+        
       </Html>
+    </Canvas>
+  );
+};
+
+const SceneTwo = ({ }) => {
+
+  const numStars = 500;
+  const stars = makeStars(numStars);
+
+  return (
+    <Canvas style={{ background: "#1a1a1a", width: '100%', height: '100%' }} > 
+      <PerspectiveCamera makeDefault fov={75} near={0.1} far={1000} position={[0, 0, 8]} />
+      <ambientLight color={0xFFFFFF} intensity={0.75}/>
+      {/* <pointLight color={0xFFEA99} intensity={100} position={[0, 0, 8]} /> */}
+
+      {/* <RotatingBox pos={[2, 2.5, 0]}/> */}
+      
+      {/* <RotatingPlanet pos={[2, 0, 5]} radius={2} texture={earthTexture}/>
+      <RotatingPlanet pos={[1.5, -3.5, 5]} radius={0.3} texture={moonTexture}/> */}
+      {/* <Sphere pos = {[4, 1, 0]} radius={0.1} color={"yellow"}/> */}
+      {stars}
+
+      {/* <OrbitControls /> */}
+
+      {/* HTML content embedded into the 3D scene */}
+      
     </Canvas>
   );
 };
 
 const App = () => {
   return (
-    <div className="page-container">
+    <div>
+      <div className="page-container">
+        {/* 3D Canvas Background */}
+        <SceneOne />
+      </div>
+      <div className="page-container">
       {/* 3D Canvas Background */}
-      <Scene />
+        <SceneTwo />
+      </div>
     </div>
+    
   );
 };
 
